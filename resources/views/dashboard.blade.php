@@ -77,7 +77,7 @@
                                             </svg>
                                         </a>
 
-                                        <form action="{{ route('links.destroy', $link) }}" method="POST" class="inline-block" onsubmit="return confirm('Voulez-vous vraiment supprimer ce lien ?');">
+                                        <form action="{{ route('links.destroy', $link) }}" method="POST" class="inline" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce lien ?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" title="Supprimer" class="text-gray-400 hover:text-red-600 transition-colors">

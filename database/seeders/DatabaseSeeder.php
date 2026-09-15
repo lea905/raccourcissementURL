@@ -15,11 +15,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::factory(10)->create()->each(function ($user) {
+            \App\Models\ShortLink::factory(rand(2, 10))->create([
+                'user_id' => $user->id,
+            ]);
+        });
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Create a specific user for testing if it doesn't exist
+        $testUser = User::where('email', 'test@example.com')->first();
+        if (!$testUser) {
+            $testUser = User::factory()->create([
+                'email' => 'test@example.com',
+            ]);
+        }
+        \App\Models\ShortLink::factory(5)->create([
+            'user_id' => $testUser->id,
         ]);
     }
 }

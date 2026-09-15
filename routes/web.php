@@ -25,6 +25,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/{code}', RedirectShortLinkController::class)->name('links.redirect');
-
 require __DIR__.'/auth.php';
+
+Route::get('/{code}', RedirectShortLinkController::class)->name('links.redirect');
