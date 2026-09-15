@@ -11,17 +11,14 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::get('/dashboard', [ShortLinkController::class, 'index'])
-    ->middleware(['auth'])->name('dashboard');
-
-Route::post('/links', [ShortLinkController::class, 'store'])
-    ->middleware(['auth'])->name('links.store');
-
 Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [ShortLinkController::class, 'index'])->name('dashboard');
+
+    Route::get('/links/{shortLink}/edit', [ShortLinkController::class, 'edit'])->name('links.edit');
+    Route::post('/links', [ShortLinkController::class, 'store'])->name('links.store');
+    Route::delete('/links/{shortLink}', [ShortLinkController::class, 'destroy'])->name('links.destroy');
+    Route::put('/links/{shortLink}', [ShortLinkController::class, 'update'])->name('links.update');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

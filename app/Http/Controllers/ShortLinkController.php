@@ -59,7 +59,11 @@ class ShortLinkController extends Controller
      */
     public function edit(ShortLink $shortLink)
     {
-        //
+        if ($shortLink->user_id !== auth()->id()) {
+            abort(403, 'Action non autorisée.');
+        }
+
+        return view('links.edit', compact('shortLink'));
     }
 
     /**
@@ -67,7 +71,19 @@ class ShortLinkController extends Controller
      */
     public function update(Request $request, ShortLink $shortLink)
     {
-        //
+        if ($shortLink->user_id !== auth()->id()) {
+            abort(403, 'Action non autorisée.');
+        }
+
+        $request->validate([
+            'original_url' => 'required|url|max:2048'
+        ]);
+
+        $shortLink->update([
+            'original_url' => $request->original_url
+        ]);
+
+        return redirect()->route('dashboard')->with('status', 'Le lien a été mis à jour avec succès !');
     }
 
     /**
@@ -75,6 +91,12 @@ class ShortLinkController extends Controller
      */
     public function destroy(ShortLink $shortLink)
     {
-        //
+        if ($shortLink->user_id !== auth()->id()) {
+            abort(403, 'Action non autorisée.');
+        }
+
+        $shortLink->delete();
+
+        return redirect()->route('dashboard')->with('status', 'Le lien a été supprimé.');
     }
 }
