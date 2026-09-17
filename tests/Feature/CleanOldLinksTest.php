@@ -44,7 +44,7 @@ class CleanOldLinksTest extends TestCase
         $this->assertSoftDeleted('short_links', ['id' => $inactiveLink->id]);
         $this->assertSoftDeleted('short_links', ['id' => $neverVisitedLink->id]);
 
-        Mail::assertSent(DeletedLinksSummary::class, function ($mail) use ($user) {
+        Mail::assertQueued(DeletedLinksSummary::class, function ($mail) use ($user) {
             return $mail->hasTo($user->email) && $mail->links->count() === 2;
         });
     }

@@ -15,7 +15,13 @@ class ShortLink extends Model
         'original_url',
         'short_code',
         'clicks_count',
-        'last_visited_at'
+        'last_visited_at',
+        'expires_at'
+    ];
+
+    protected $casts = [
+        'last_visited_at' => 'datetime',
+        'expires_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

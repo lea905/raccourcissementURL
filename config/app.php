@@ -123,4 +123,5 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'link_inactive_days' => env('LINK_INACTIVE_DAYS', 30),
 ];

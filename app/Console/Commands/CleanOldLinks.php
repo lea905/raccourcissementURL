@@ -21,10 +21,10 @@ class CleanOldLinks extends Command
      */
     public function handle()
     {
-        $days = env('LINK_INACTIVE_DAYS', 30);
+        $days = config('app.link_inactive_days', 30);
         $threshold = now()->subDays($days);
 
-        $inactiveLinks = ShortLink::where(function ($query) use ($threshold) {
+        $inactiveLinks = ShortLink::with('user')->where(function ($query) use ($threshold) {
             $query->where('last_visited_at', '<', $threshold)
                 ->orWhere(function ($q) use ($threshold) {
                     $q->whereNull('last_visited_at')
@@ -43,7 +43,7 @@ class CleanOldLinks extends Command
             $user = $links->first()->user;
 
             if ($user && $user->email) {
-                Mail::to($user->email)->send(new DeletedLinksSummary($links));
+                Mail::to($user->email)->queue(new DeletedLinksSummary($links));
             }
 
             foreach ($links as $link) {
