@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ShortLink;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Gate;
 
 class ShortLinkController extends Controller
 {
@@ -32,7 +33,8 @@ class ShortLinkController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'original_url' => 'required|url|max:2048'
+            'original_url' => 'required|url|max:2048',
+            'expires_at' => 'nullable|date|after:now',
         ]);
         do {
             $code = Str::random(6);
@@ -41,6 +43,7 @@ class ShortLinkController extends Controller
         auth()->user()->shortLinks()->create([
             'original_url' => $request->original_url,
             'short_code' => $code,
+            'expires_at' => $request->expires_at,
         ]);
 
         return redirect()->route('dashboard')->with('status', 'Lien généré avec succès !');
@@ -59,9 +62,7 @@ class ShortLinkController extends Controller
      */
     public function edit(ShortLink $shortLink)
     {
-        if ($shortLink->user_id !== auth()->id()) {
-            abort(403, 'Action non autorisée.');
-        }
+        Gate::authorize('update', $shortLink);
 
         return view('links.edit', compact('shortLink'));
     }
@@ -71,16 +72,16 @@ class ShortLinkController extends Controller
      */
     public function update(Request $request, ShortLink $shortLink)
     {
-        if ($shortLink->user_id !== auth()->id()) {
-            abort(403, 'Action non autorisée.');
-        }
+        Gate::authorize('update', $shortLink);
 
         $request->validate([
-            'original_url' => 'required|url|max:2048'
+            'original_url' => 'required|url|max:2048',
+            'expires_at' => 'nullable|date|after:now',
         ]);
 
         $shortLink->update([
-            'original_url' => $request->original_url
+            'original_url' => $request->original_url,
+            'expires_at' => $request->expires_at,
         ]);
 
         return redirect()->route('dashboard')->with('status', 'Le lien a été mis à jour avec succès !');
@@ -91,9 +92,7 @@ class ShortLinkController extends Controller
      */
     public function destroy(ShortLink $shortLink)
     {
-        if ($shortLink->user_id !== auth()->id()) {
-            abort(403, 'Action non autorisée.');
-        }
+        Gate::authorize('delete', $shortLink);
 
         $shortLink->delete();
 

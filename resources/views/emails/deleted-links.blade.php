@@ -1,7 +1,7 @@
 <x-mail::message>
 # Bonjour,
 
-Vos liens courts suivants ont été supprimés en raison d'une inactivité de plus de {{ env('LINK_INACTIVE_DAYS', 30) }} jours :
+Vos liens courts suivants ont été supprimés en raison d'une inactivité de plus de {{ config('app.link_inactive_days', 30) }} jours :
 
 <x-mail::table>
 | Lien d'origine | Code court | Date de création |

@@ -27,6 +27,12 @@
                         <x-input-error :messages="$errors->get('original_url')" class="mt-2" />
                     </div>
 
+                    <div>
+                        <x-input-label for="expires_at" value="Date d'expiration (optionnel)" />
+                        <x-text-input id="expires_at" name="expires_at" type="datetime-local" class="mt-1 block w-full" value="{{ old('expires_at', $shortLink->expires_at ? $shortLink->expires_at->format('Y-m-d\TH:i') : '') }}" />
+                        <x-input-error :messages="$errors->get('expires_at')" class="mt-2" />
+                    </div>
+
                     <div class="flex items-center gap-4">
                         <x-primary-button>Enregistrer les modifications</x-primary-button>
                         <a href="{{ route('dashboard') }}" class="text-sm text-gray-600 hover:text-gray-900">Annuler</a>

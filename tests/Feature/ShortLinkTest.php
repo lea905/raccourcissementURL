@@ -108,4 +108,16 @@ class ShortLinkTest extends TestCase
 
         $response->assertStatus(404);
     }
+    public function test_expired_link_returns_404()
+    {
+        $user = User::factory()->create();
+        $link = ShortLink::factory()->create([
+            'user_id' => $user->id,
+            'expires_at' => now()->subDay(),
+        ]);
+
+        $response = $this->get('/' . $link->short_code);
+
+        $response->assertStatus(404);
+    }
 }
